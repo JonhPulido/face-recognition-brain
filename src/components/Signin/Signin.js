@@ -18,7 +18,11 @@ class Signin extends React.Component {
   }
 
   onSubmitSignIn = () => {
-    fetch('http://localhost:3000/signin', {
+  //  fetch('http://localhost:3000/download', {
+  //     method: 'get',
+  //     headers: {'Content-Type': 'application/x-rar-compressed'},
+  //   })
+    fetch('https://facer-recognition.herokuapp.com/signin', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
