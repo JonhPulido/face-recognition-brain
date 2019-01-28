@@ -1,11 +1,14 @@
 import React from 'react';
+import { API_URL } from '../config'
+console.log(API_URL)
 
 class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       signInEmail: '',
-      signInPassword: ''
+      signInPassword: '',
+      validations : '',
     }
   }
 
@@ -18,11 +21,7 @@ class Signin extends React.Component {
   }
 
   onSubmitSignIn = () => {
-  //  fetch('http://localhost:3000/download', {
-  //     method: 'get',
-  //     headers: {'Content-Type': 'application/x-rar-compressed'},
-  //   })
-    fetch('https://facer-recognition.herokuapp.com/signin', {
+    fetch(`${API_URL}/signin`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -30,13 +29,16 @@ class Signin extends React.Component {
         password: this.state.signInPassword
       })
     })
-      .then(response => response.json())
-      .then(user => {
-        if (user.id) {
-          this.props.loadUser(user)
-          this.props.onRouteChange('home');
-        }
-      })
+    .then(response => response.json())
+    .then(user => {
+      if (user.id) {
+        this.props.loadUser(user)
+        this.props.onRouteChange('home');
+      }else{
+        this.setState({validations : user })
+      }
+    })
+      
   }
 
   render() {
@@ -79,6 +81,7 @@ class Signin extends React.Component {
             <div className="lh-copy mt3">
               <p  onClick={() => onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
             </div>
+            <label>{this.state.validations}</label>
           </div>
         </main>
       </article>

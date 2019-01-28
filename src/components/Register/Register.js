@@ -1,4 +1,5 @@
 import React from 'react';
+import { API_URL } from '../config'
 
 class Register extends React.Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class Register extends React.Component {
   }
 
   onSubmitSignIn = () => {
-    fetch('https://facer-recognition.herokuapp.com/register', {
+    fetch(`${API_URL}/register`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -32,7 +33,7 @@ class Register extends React.Component {
         name: this.state.name
       })
     })
-      .then(response => console.log(response))
+      .then(response => response.json())
       .then(user => {
         if (user) {
           this.props.loadUser(user)
