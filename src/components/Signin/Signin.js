@@ -8,7 +8,7 @@ class Signin extends React.Component {
     this.state = {
       signInEmail: '',
       signInPassword: '',
-      validations : '',
+      formError : '',
     }
   }
 
@@ -35,7 +35,7 @@ class Signin extends React.Component {
         this.props.loadUser(user)
         this.props.onRouteChange('home');
       }else{
-        this.setState({validations : user })
+        this.setState({formError : user })
       }
     })
       
@@ -81,7 +81,7 @@ class Signin extends React.Component {
             <div className="lh-copy mt3">
               <p  onClick={() => onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
             </div>
-            <label>{this.state.validations}</label>
+            <label>{this.state.formError}</label>
           </div>
         </main>
       </article>
