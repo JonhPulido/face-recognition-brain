@@ -1,6 +1,6 @@
 import React from 'react';
 import { API_URL } from '../config'
-console.log(API_URL)
+console.log('API URL: '+API_URL)
 
 class Signin extends React.Component {
   constructor(props) {

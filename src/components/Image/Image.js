@@ -6,7 +6,7 @@ class Image extends React.Component {
     return (
         <div className='fl w-50-l w-100-m'>
           <h1>{imageObj.name}</h1>
-          <img className='grow' src={imageObj.img} />
+          <img className='grow' alt='' src={imageObj.img} />
           <p>Photo Description here</p>
         </div>
       );
