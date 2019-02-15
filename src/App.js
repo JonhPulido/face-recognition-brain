@@ -33,16 +33,21 @@ const particlesOptions = {
     }
   }
 }
-let urls = [
-  { img : img,
-    name : "First Image"} ,
-  { img : img2,
-    name : "Second Image" }, 
-];
+
 const toastColor = { 
   background: '#505050', 
   text: '#fff' 
 }
+
+let urls = fetch(`${API_URL}/images`,{
+  method: 'get',
+  headers: {'Content-Type': 'application/json'}
+
+})
+.then(response => response.json())
+.then(images => {
+  console.log(images)
+})
 
 class App extends Component {
   constructor() {
@@ -107,11 +112,11 @@ class App extends Component {
         this.state.input)
       .then(response => {
         if (response) {
-          fetch('https://facer-recognition.herokuapp.com/image', {
+          fetch(`${API_URL}/image`, {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-              id: this.state.user.id
+              id: this.state.user.id,
             })
           })
             .then(response => response.json())
@@ -123,6 +128,15 @@ class App extends Component {
         this.displayFaceBox(this.calculateFaceLocation(response))
       })
       .catch(err => console.log(err));
+      
+      fetch(`${API_URL}/image-save`, {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          id: this.state.user.id,
+          image_url: this.state.input
+        })
+      })
   }
 
   onRouteChange = (route) => {
@@ -157,7 +171,7 @@ class App extends Component {
     if (errs.length) {
       return errs.forEach(err => this.toast(err, 'custom', 2000, toastColor))
     }
-    this.setState({ uploading: true })
+    formData.append('id', 1)
    
    fetch(`${API_URL}/image-upload`, {
       method: 'POST',
@@ -181,7 +195,6 @@ class App extends Component {
     .catch(err => {
       err.json().then(e => {
         this.toast(e.message, 'custom', 2000, toastColor)
-        this.setState({ uploading: false })
       })
     })
   }
