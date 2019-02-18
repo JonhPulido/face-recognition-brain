@@ -10,8 +10,6 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import Gallery from './components/Gallery/Gallery'
 import './App.css';
-import img from './files/images/german1.jpg';
-import img2 from './files/images/german2.jpg';
 import { API_URL } from './components/config';
 import Notifications, { notify } from 'react-notify-toast';
 
@@ -38,16 +36,6 @@ const toastColor = {
   background: '#505050', 
   text: '#fff' 
 }
-
-let urls = fetch(`${API_URL}/images`,{
-  method: 'get',
-  headers: {'Content-Type': 'application/json'}
-
-})
-.then(response => response.json())
-.then(images => {
-  console.log(images)
-})
 
 class App extends Component {
   constructor() {
@@ -185,11 +173,6 @@ class App extends Component {
       return res.json()
     })
     .then(image => {
-      let photos = urls
-      photos.push(
-        { img : image[0].secure_url,
-          name : "new Image Uploaded"}
-      )
       this.onInputChange(image[0].secure_url)
     })
     .catch(err => {
@@ -214,10 +197,7 @@ class App extends Component {
 				</div>;	   
 		case 'gallery':
 			return <div>  
-					<Gallery 
-						imageArray={urls}
-						addPic={this.addImage}
-					/>
+					<Gallery />
 				</div>;   
 		case 'home':
 			return <div>
