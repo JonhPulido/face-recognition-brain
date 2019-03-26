@@ -13,8 +13,8 @@
     "tachyons": "^4.9.0"
   },
   "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
+    "node": "= 8.11.3",
+    "npm": "= 5.6.0"
   },
   "scripts": {
     "start": "react-scripts start",
