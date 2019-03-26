@@ -13,8 +13,6 @@ import './App.css';
 import { API_URL } from './components/config';
 import Notifications, { notify } from 'react-notify-toast';
 
-require('dotenv').config();
-
 //You must add your own API key here from Clarifai.
 const app = new Clarifai.App({
  apiKey: 'f6076453971f40e9925a89d743b5d0a4'
