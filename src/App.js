@@ -17,7 +17,7 @@ require('dotenv').config();
 
 //You must add your own API key here from Clarifai.
 const app = new Clarifai.App({
- apiKey: 'f2713fade2dd431395deae7a9c4db24a'
+ apiKey: 'f6076453971f40e9925a89d743b5d0a4'
 });
 
 const particlesOptions = {
@@ -41,6 +41,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      errors: '',
       input: '',
       imageUrl: '',
       box: {},
@@ -94,12 +95,24 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
+    this.setState({errors : ''});
     app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL,
         this.state.input)
       .then(response => {
-        if (response) {
+       const obj = response.outputs[0].data;
+       const hasFace  = Object.entries(obj).length === 0 && obj.constructor === Object
+        if (!hasFace) {
+          console.log('holiii')
+          fetch(`${API_URL}/image-save`, {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: this.state.user.id,
+              image_url: this.state.input
+            })
+          });
           fetch(`${API_URL}/image`, {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
@@ -112,22 +125,14 @@ class App extends Component {
               this.setState(Object.assign(this.state.user, { entries: count}))
             })
 
-        }
-        this.displayFaceBox(this.calculateFaceLocation(response))
+          this.displayFaceBox(this.calculateFaceLocation(response))
+        }else {throw new Error ('We cant detect any faces on that image')}
       })
-      .catch(err => console.log(err));
-      
-      fetch(`${API_URL}/image-save`, {
-        method: 'post',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          id: this.state.user.id,
-          image_url: this.state.input
-        })
-      })
+      .catch(err => this.setState({errors : err.toString()}));
   }
 
   onRouteChange = (route) => {
+    this.setState({imageUrl: ''})
     if (route === 'signout') {
       this.setState({isSignedIn: false})
     } else if (route === 'home') {
@@ -211,6 +216,7 @@ class App extends Component {
             onButtonSubmit={this.onButtonSubmit}
             onChange={this.onChange}
 					/>
+          <label>{this.state.errors}</label>
 					<FaceRecognition box={box} imageUrl={imageUrl} />
 					</div>       
 		default:

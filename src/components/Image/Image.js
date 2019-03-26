@@ -2,7 +2,7 @@ import React from "react";
 
 class Image extends React.Component {
   render() {
-    const { imageObj } = this.props;
+    const {imageObj} = this.props;
     return (
         <div className='fl w-50-l w-100-m'>
           <h1>Photo name here</h1>
