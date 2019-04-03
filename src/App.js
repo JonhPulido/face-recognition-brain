@@ -39,6 +39,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      inputError : '',
       errors: '',
       input: '',
       imageUrl: '',
@@ -61,7 +62,7 @@ class App extends Component {
       name: data.name,
       email: data.email,
       entries: data.entries,
-      joined: data.joined
+      joined: data.joined,
     }})
   }
 
@@ -81,17 +82,29 @@ class App extends Component {
   displayFaceBox = (box) => {
     this.setState({box: box});
   }
+  validateForm = () =>{
+    let inputError = '';
+    if(!this.state.input){
+        inputError = 'Put an image URL or Browse for an image!'
+    }
+    if(inputError){
+      this.setState({inputError})
+      return false;
+    }
+      return true;
+    }
 
   onInputChange = (event) => {
-    if(event.target){
-    this.setState({input: event.target.value});
-  }else{
-    this.setState({input: event});
-    this.setState({imageUrl: event});
-  }
+    if(this.validateForm()){
+        this.setState({input: event.target.value});
+    }else{
+        this.setState({input: event});
+        this.setState({imageUrl: event});
+    }
   }
 
   onButtonSubmit = () => {
+    if(this.validateForm()) {
     this.setState({imageUrl: this.state.input});
     this.setState({errors : ''});
     app.models
@@ -102,7 +115,6 @@ class App extends Component {
        const obj = response.outputs[0].data;
        const hasFace  = Object.entries(obj).length === 0 && obj.constructor === Object
         if (!hasFace) {
-          console.log('holiii')
           fetch(`${API_URL}/image-save`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -127,6 +139,10 @@ class App extends Component {
         }else {throw new Error ('We cant detect any faces on that image')}
       })
       .catch(err => this.setState({errors : err.toString()}));
+      this.setState({
+          inputError: ''
+        })
+    } 
   }
 
   onRouteChange = (route) => {
@@ -210,11 +226,12 @@ class App extends Component {
 						entries={this.state.user.entries}
 					/>
 					<ImageLinkForm
-						onInputChange={this.onInputChange}
-            onButtonSubmit={this.onButtonSubmit}
-            onChange={this.onChange}
+                        onInputChange={this.onInputChange}
+                        onButtonSubmit={this.onButtonSubmit}
+                        onChange={this.onChange}
 					/>
-          <label>{this.state.errors}</label>
+                    <label> {this.state.inputError}</label>
+                    <label>{this.state.errors}</label>
 					<FaceRecognition box={box} imageUrl={imageUrl} />
 					</div>       
 		default:
